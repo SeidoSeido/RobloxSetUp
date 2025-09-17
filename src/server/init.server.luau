@@ -78,20 +78,6 @@ spawn(function()
 	end
 end)
 
--- Create a welcome message for new players
-local function createWelcomeMessage()
-	local message = Instance.new("Hint")
-	message.Text = "🏗️ Welcome to the Building Demo! Press H to build your first house!"
-	message.Parent = workspace
-
-	-- Remove message after 10 seconds
-	game:GetService("Debris"):AddItem(message, 10)
-end
-
--- Show welcome message when server starts
-wait(2)
-createWelcomeMessage()
-
 -- Server-side building validation and logging
 local buildingCounts = {
 	houses = 0,

@@ -23,7 +23,7 @@ local shopData = {
 		{
 			id = "fire_seed",
 			name = "Fire Seed",
-			description = "Grows into a fiery creature that helps with garden warmth and volcano exploration.",
+			description = "Grows fiery creatures for warmth and exploration.",
 			price = 50,
 			image = "rbxassetid://0", -- You'd replace with actual image IDs
 			rarity = "Common",
@@ -32,7 +32,7 @@ local shopData = {
 		{
 			id = "water_seed",
 			name = "Water Seed",
-			description = "Evolves into an aquatic companion perfect for ocean dimensions.",
+			description = "Evolves into aquatic companions for ocean areas.",
 			price = 75,
 			image = "rbxassetid://0",
 			rarity = "Common",
@@ -40,8 +40,8 @@ local shopData = {
 		},
 		{
 			id = "legendary_seed",
-			name = "Legendary Rainbow Seed",
-			description = "Extremely rare seed that can become any element! Guaranteed unique creature.",
+			name = "Rainbow Seed",
+			description = "Rare seed that becomes any element! Unique creature guaranteed.",
 			price = 500,
 			image = "rbxassetid://0",
 			rarity = "Legendary",
@@ -51,8 +51,8 @@ local shopData = {
 	Tools = {
 		{
 			id = "magic_watering_can",
-			name = "Magic Watering Can",
-			description = "Waters all plants instantly with sparkly magic water!",
+			name = "Magic Can",
+			description = "Waters all plants instantly with magic!",
 			price = 100,
 			image = "rbxassetid://0",
 			rarity = "Rare",
@@ -61,7 +61,7 @@ local shopData = {
 		{
 			id = "growth_crystal",
 			name = "Growth Crystal",
-			description = "Speeds up creature evolution by 50% for 1 hour.",
+			description = "Speeds up evolution by 50% for 1 hour.",
 			price = 25,
 			image = "rbxassetid://0",
 			rarity = "Common",
@@ -72,7 +72,7 @@ local shopData = {
 		{
 			id = "magic_fountain",
 			name = "Magic Fountain",
-			description = "Beautiful fountain that makes nearby creatures happier.",
+			description = "Beautiful fountain that boosts creature happiness.",
 			price = 200,
 			image = "rbxassetid://0",
 			rarity = "Rare",
@@ -81,11 +81,63 @@ local shopData = {
 		{
 			id = "rainbow_bridge",
 			name = "Rainbow Bridge",
-			description = "Stunning bridge decoration that spans across your garden.",
+			description = "Stunning bridge decoration for your garden.",
 			price = 300,
 			image = "rbxassetid://0",
 			rarity = "Epic",
 			color = Color3.fromRGB(255, 180, 255),
+		},
+	},
+	Gamepasses = {
+		{
+			id = "double_coins_pass",
+			name = "Double Coins Pass",
+			description = "Earn 2x coins from all activities! Permanent boost.",
+			price = 199, -- Robux price
+			image = "rbxassetid://0",
+			rarity = "Premium",
+			color = Color3.fromRGB(255, 215, 0),
+			gamepass = true,
+		},
+		{
+			id = "vip_garden_pass",
+			name = "VIP Garden Access",
+			description = "Unlock exclusive VIP area with rare creatures!",
+			price = 299,
+			image = "rbxassetid://0",
+			rarity = "Premium",
+			color = Color3.fromRGB(147, 112, 219),
+			gamepass = true,
+		},
+		{
+			id = "instant_hatch_pass",
+			name = "Instant Hatch Pass",
+			description = "Skip all waiting times! Instant everything.",
+			price = 149,
+			image = "rbxassetid://0",
+			rarity = "Premium",
+			color = Color3.fromRGB(255, 69, 0),
+			gamepass = true,
+		},
+		{
+			id = "mega_storage_pass",
+			name = "Mega Storage Pass",
+			description = "Unlimited inventory space for everything!",
+			price = 99,
+			image = "rbxassetid://0",
+			rarity = "Premium",
+			color = Color3.fromRGB(50, 205, 50),
+			gamepass = true,
+		},
+		{
+			id = "legendary_starter_pass",
+			name = "Starter Pack",
+			description = "3 legendary creatures, 10K coins, and exclusive tools!",
+			price = 399,
+			image = "rbxassetid://0",
+			rarity = "Premium",
+			color = Color3.fromRGB(255, 20, 147),
+			gamepass = true,
 		},
 	},
 }
@@ -104,189 +156,179 @@ function ShopGUI.CreateShopInterface()
 	blurFrame.Size = UDim2.fromScale(1, 1)
 	blurFrame.Position = UDim2.fromScale(0, 0)
 	blurFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	blurFrame.BackgroundTransparency = 0.3
+	blurFrame.BackgroundTransparency = 1
 	blurFrame.Parent = shopScreen
 
 	-- Main shop container
 	local shopContainer = Instance.new("Frame")
 	shopContainer.Name = "ShopContainer"
-	shopContainer.Size = UDim2.fromScale(0.9, 0.85)
-	shopContainer.Position = UDim2.fromScale(0.05, 0.075)
-	shopContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+	shopContainer.Size = UDim2.fromScale(0.8, 0.75)
+	shopContainer.Position = UDim2.fromScale(0.1, 0.125)
+	shopContainer.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 	shopContainer.BorderSizePixel = 0
 	shopContainer.Parent = shopScreen
 
-	-- Rounded corners
-	local corner = Instance.new("UICorner")
-	corner.CornerRadius = UDim.new(0, 20)
-	corner.Parent = shopContainer
-
-	-- Magical border glow
-	local borderGlow = Instance.new("UIStroke")
-	borderGlow.Color = Color3.fromRGB(100, 200, 255)
-	borderGlow.Thickness = 3
-	borderGlow.Transparency = 0.5
-	borderGlow.Parent = shopContainer
-
-	-- Header section
+	-- Clean border
+	local borderStroke = Instance.new("UIStroke")
+	borderStroke.Color = Color3.fromRGB(80, 80, 85)
+	borderStroke.Thickness = 1
+	borderStroke.Transparency = 0
+	borderStroke.Parent = shopContainer -- Header section
 	local header = Instance.new("Frame")
 	header.Name = "Header"
-	header.Size = UDim2.fromScale(1, 0.12)
+	header.Size = UDim2.fromScale(1, 0.15)
 	header.Position = UDim2.fromScale(0, 0)
-	header.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
+	header.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
 	header.BorderSizePixel = 0
 	header.Parent = shopContainer
 
-	local headerCorner = Instance.new("UICorner")
-	headerCorner.CornerRadius = UDim.new(0, 20)
-	headerCorner.Parent = header
-
-	-- Shop title
+	-- Bottom border for header
+	local headerBorder = Instance.new("Frame")
+	headerBorder.Name = "HeaderBorder"
+	headerBorder.Size = UDim2.fromScale(0.9, 0.02)
+	headerBorder.Position = UDim2.fromScale(0.05, 0.98)
+	headerBorder.BackgroundColor3 = Color3.fromRGB(60, 60, 65)
+	headerBorder.BorderSizePixel = 0
+	headerBorder.Parent = header -- Shop title
 	local titleLabel = Instance.new("TextLabel")
 	titleLabel.Name = "ShopTitle"
-	titleLabel.Size = UDim2.fromScale(0.7, 1)
-	titleLabel.Position = UDim2.fromScale(0.05, 0)
+	titleLabel.Size = UDim2.fromScale(0.6, 0.6)
+	titleLabel.Position = UDim2.fromScale(0.05, 0.2)
 	titleLabel.BackgroundTransparency = 1
-	titleLabel.Text = "✨ MAGICAL SPIRIT SHOP ✨"
+	titleLabel.Text = "SHOP"
 	titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 	titleLabel.TextScaled = true
-	titleLabel.Font = Enum.Font.GothamBold
+	titleLabel.Font = Enum.Font.Arcade
 	titleLabel.Parent = header
 
 	-- Money display
 	local moneyFrame = Instance.new("Frame")
 	moneyFrame.Name = "MoneyDisplay"
-	moneyFrame.Size = UDim2.fromScale(0.2, 0.7)
-	moneyFrame.Position = UDim2.fromScale(0.75, 0.15)
-	moneyFrame.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
+	moneyFrame.Size = UDim2.fromScale(0.25, 0.5)
+	moneyFrame.Position = UDim2.fromScale(0.65, 0.25)
+	moneyFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
 	moneyFrame.BorderSizePixel = 0
 	moneyFrame.Parent = header
 
 	local moneyCorner = Instance.new("UICorner")
-	moneyCorner.CornerRadius = UDim.new(0, 10)
+	moneyCorner.CornerRadius = UDim.new(0, 4)
 	moneyCorner.Parent = moneyFrame
+
+	local moneyBorder = Instance.new("UIStroke")
+	moneyBorder.Color = Color3.fromRGB(80, 80, 85)
+	moneyBorder.Thickness = 1
+	moneyBorder.Parent = moneyFrame
 
 	local moneyLabel = Instance.new("TextLabel")
 	moneyLabel.Name = "MoneyAmount"
 	moneyLabel.Size = UDim2.fromScale(1, 1)
 	moneyLabel.Position = UDim2.fromScale(0, 0)
 	moneyLabel.BackgroundTransparency = 1
-	moneyLabel.Text = "💰 " .. (GameManager.GetPlayerData(player).money or 0)
-	moneyLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+	moneyLabel.Text = "$" .. (GameManager.GetPlayerData(player).money or 0)
+	moneyLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 	moneyLabel.TextScaled = true
-	moneyLabel.Font = Enum.Font.GothamBold
-	moneyLabel.Parent = moneyFrame
-
-	-- Close button
+	moneyLabel.Font = Enum.Font.Arcade
+	moneyLabel.Parent = moneyFrame -- Close button
 	local closeButton = Instance.new("TextButton")
 	closeButton.Name = "CloseButton"
-	closeButton.Size = UDim2.fromScale(0.08, 0.6)
-	closeButton.Position = UDim2.fromScale(0.9, 0.2)
-	closeButton.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+	closeButton.Size = UDim2.fromScale(0.06, 0.4)
+	closeButton.Position = UDim2.fromScale(0.92, 0.3)
+	closeButton.BackgroundTransparency = 1
 	closeButton.BorderSizePixel = 0
-	closeButton.Text = "✕"
+	closeButton.Text = "X"
 	closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 	closeButton.TextScaled = true
-	closeButton.Font = Enum.Font.GothamBold
+	closeButton.Font = Enum.Font.Arcade
 	closeButton.Parent = header
-
-	local closeCorner = Instance.new("UICorner")
-	closeCorner.CornerRadius = UDim.new(0, 10)
-	closeCorner.Parent = closeButton
-
 	-- Category tabs
 	local categoryFrame = Instance.new("Frame")
 	categoryFrame.Name = "CategoryTabs"
-	categoryFrame.Size = UDim2.fromScale(1, 0.08)
-	categoryFrame.Position = UDim2.fromScale(0, 0.12)
+	categoryFrame.Size = UDim2.fromScale(1, 0.12)
+	categoryFrame.Position = UDim2.fromScale(0, 0.15)
 	categoryFrame.BackgroundTransparency = 1
 	categoryFrame.Parent = shopContainer
 
-	local categoryLayout = Instance.new("UIListLayout")
-	categoryLayout.FillDirection = Enum.FillDirection.Horizontal
-	categoryLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-	categoryLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-	categoryLayout.Padding = UDim.new(0, 10)
-	categoryLayout.Parent = categoryFrame
+	-- Remove the UIListLayout and manually position buttons for true flexbox behavior
+	-- Don't use UIListLayout, manually position for equal spacing
 
-	local categories = { "Seeds", "Tools", "Decorations" }
-	local currentCategory = "Seeds"
+	local categories = { "Gamepasses", "Tools", "Decorations", "Seeds" }
+	local currentCategory = "Gamepasses"
 	local categoryButtons = {}
+
+	-- Create buttons with manual positioning for true flexbox spacing
+	local buttonWidth = 0.15 -- 15% width each (smaller buttons)
+	local totalGapSpace = 1 - (4 * buttonWidth) -- Remaining space for gaps
+	local gapSize = totalGapSpace / 5 -- 5 gaps (before, between, after)
 
 	for i, category in ipairs(categories) do
 		local categoryButton = Instance.new("TextButton")
 		categoryButton.Name = category .. "Tab"
-		categoryButton.Size = UDim2.fromScale(0.25, 1)
-		categoryButton.BackgroundColor3 = category == currentCategory and Color3.fromRGB(100, 150, 255)
-			or Color3.fromRGB(60, 60, 80)
+
+		-- Calculate position: gap + (i-1) * (buttonWidth + gap)
+		local xPosition = gapSize + (i - 1) * (buttonWidth + gapSize)
+		categoryButton.Size = UDim2.fromScale(buttonWidth, 0.6)
+		categoryButton.Position = UDim2.fromScale(xPosition, 0.2)
+
+		categoryButton.BackgroundTransparency = 1
 		categoryButton.BorderSizePixel = 0
-		categoryButton.Text = category
-		categoryButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+		categoryButton.Text = category:upper()
+		categoryButton.TextColor3 = category == currentCategory and Color3.fromRGB(255, 255, 255)
+			or Color3.fromRGB(180, 180, 180)
 		categoryButton.TextScaled = true
-		categoryButton.Font = Enum.Font.Gotham
+		categoryButton.Font = Enum.Font.Arcade
 		categoryButton.Parent = categoryFrame
 
-		local tabCorner = Instance.new("UICorner")
-		tabCorner.CornerRadius = UDim.new(0, 8)
-		tabCorner.Parent = categoryButton
-
 		categoryButtons[category] = categoryButton
-	end
-
-	-- Items scroll frame
+	end -- Items scroll frame
 	local itemsScroll = Instance.new("ScrollingFrame")
 	itemsScroll.Name = "ItemsContainer"
-	itemsScroll.Size = UDim2.fromScale(0.95, 0.75)
-	itemsScroll.Position = UDim2.fromScale(0.025, 0.22)
-	itemsScroll.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+	itemsScroll.Size = UDim2.fromScale(0.9, 0.65)
+	itemsScroll.Position = UDim2.fromScale(0.05, 0.3)
+	itemsScroll.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 	itemsScroll.BorderSizePixel = 0
-	itemsScroll.ScrollBarThickness = 8
-	itemsScroll.ScrollBarImageColor3 = Color3.fromRGB(100, 150, 255)
+	itemsScroll.ScrollBarThickness = 6
+	itemsScroll.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 105)
 	itemsScroll.Parent = shopContainer
 
-	local itemsCorner = Instance.new("UICorner")
-	itemsCorner.CornerRadius = UDim.new(0, 15)
-	itemsCorner.Parent = itemsScroll
-
-	-- Grid layout for items
+	-- Grid layout for items with fixed responsive sizing
 	local itemsLayout = Instance.new("UIGridLayout")
-	itemsLayout.CellSize = UDim2.fromScale(0.3, 0.4)
-	itemsLayout.CellPadding = UDim2.fromScale(0.02, 0.02)
+	itemsLayout.CellSize = UDim2.fromOffset(200, 280) -- Fixed size for consistency
+	itemsLayout.CellPadding = UDim2.fromOffset(15, 15)
 	itemsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 	itemsLayout.VerticalAlignment = Enum.VerticalAlignment.Top
-	itemsLayout.Parent = itemsScroll
-
-	-- Function to create item cards
+	itemsLayout.Parent = itemsScroll -- Add padding around the grid
+	local gridPadding = Instance.new("UIPadding")
+	gridPadding.PaddingTop = UDim.new(0, 20)
+	gridPadding.PaddingBottom = UDim.new(0, 20)
+	gridPadding.PaddingLeft = UDim.new(0, 20)
+	gridPadding.PaddingRight = UDim.new(0, 20)
+	gridPadding.Parent = itemsScroll -- Function to create item cards
 	local function createItemCard(itemData)
 		local itemCard = Instance.new("Frame")
 		itemCard.Name = itemData.id
 		itemCard.BackgroundColor3 = Color3.fromRGB(45, 45, 65)
 		itemCard.BorderSizePixel = 0
 
-		local cardCorner = Instance.new("UICorner")
-		cardCorner.CornerRadius = UDim.new(0, 12)
-		cardCorner.Parent = itemCard
-
 		-- Rarity border
 		local rarityBorder = Instance.new("UIStroke")
 		rarityBorder.Color = itemData.color
 		rarityBorder.Thickness = 2
-		rarityBorder.Parent = itemCard
-
-		-- Item image
+		rarityBorder.Parent = itemCard -- Item image
 		local itemImage = Instance.new("ImageLabel")
 		itemImage.Name = "ItemImage"
-		itemImage.Size = UDim2.fromScale(0.8, 0.4)
-		itemImage.Position = UDim2.fromScale(0.1, 0.05)
-		itemImage.BackgroundColor3 = itemData.color
-		itemImage.BackgroundTransparency = 0.8
+		itemImage.Size = UDim2.fromScale(1, 0.45)
+		itemImage.Position = UDim2.fromScale(0, 0)
+		itemImage.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
 		itemImage.BorderSizePixel = 0
 		itemImage.Image = itemData.image
-		itemImage.Parent = itemCard
-
-		local imageCorner = Instance.new("UICorner")
-		imageCorner.CornerRadius = UDim.new(0, 8)
-		imageCorner.Parent = itemImage
+		itemImage.Parent = itemCard -- Subtle rarity indicator
+		local rarityIndicator = Instance.new("Frame")
+		rarityIndicator.Name = "RarityIndicator"
+		rarityIndicator.Size = UDim2.fromScale(0.15, 0.05)
+		rarityIndicator.Position = UDim2.fromScale(0.85, 0.02)
+		rarityIndicator.BackgroundColor3 = itemData.color
+		rarityIndicator.BorderSizePixel = 0
+		rarityIndicator.Parent = itemImage
 
 		-- Item name
 		local itemName = Instance.new("TextLabel")
@@ -294,11 +336,17 @@ function ShopGUI.CreateShopInterface()
 		itemName.Size = UDim2.fromScale(0.9, 0.15)
 		itemName.Position = UDim2.fromScale(0.05, 0.48)
 		itemName.BackgroundTransparency = 1
-		itemName.Text = itemData.name
+		itemName.Text = itemData.name:upper()
 		itemName.TextColor3 = Color3.fromRGB(255, 255, 255)
 		itemName.TextScaled = true
-		itemName.Font = Enum.Font.GothamBold
+		itemName.Font = Enum.Font.Arcade
 		itemName.Parent = itemCard
+
+		-- Add padding to item name
+		local namePadding = Instance.new("UIPadding")
+		namePadding.PaddingLeft = UDim.new(0, 8)
+		namePadding.PaddingRight = UDim.new(0, 8)
+		namePadding.Parent = itemName
 
 		-- Item description
 		local itemDesc = Instance.new("TextLabel")
@@ -309,75 +357,103 @@ function ShopGUI.CreateShopInterface()
 		itemDesc.Text = itemData.description
 		itemDesc.TextColor3 = Color3.fromRGB(200, 200, 200)
 		itemDesc.TextScaled = true
-		itemDesc.Font = Enum.Font.Gotham
+		itemDesc.Font = Enum.Font.SourceSans
 		itemDesc.TextWrapped = true
 		itemDesc.Parent = itemCard
+
+		-- Add padding to item description
+		local descPadding = Instance.new("UIPadding")
+		descPadding.PaddingLeft = UDim.new(0, 12)
+		descPadding.PaddingRight = UDim.new(0, 12)
+		descPadding.PaddingTop = UDim.new(0, 4)
+		descPadding.PaddingBottom = UDim.new(0, 4)
+		descPadding.Parent = itemDesc
 
 		-- Price and buy button
 		local buyButton = Instance.new("TextButton")
 		buyButton.Name = "BuyButton"
-		buyButton.Size = UDim2.fromScale(0.8, 0.12)
-		buyButton.Position = UDim2.fromScale(0.1, 0.85)
-		buyButton.BackgroundColor3 = Color3.fromRGB(100, 200, 100)
+		buyButton.Size = UDim2.fromScale(0.9, 0.12)
+		buyButton.Position = UDim2.fromScale(0.05, 0.86)
+		buyButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 		buyButton.BorderSizePixel = 0
-		buyButton.Text = "💰 " .. itemData.price .. " - BUY"
+		buyButton.Text = (itemData.gamepass and "R$" or "$") .. itemData.price
 		buyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 		buyButton.TextScaled = true
-		buyButton.Font = Enum.Font.GothamBold
+		buyButton.Font = Enum.Font.Arcade
 		buyButton.Parent = itemCard
-
-		local buyCorner = Instance.new("UICorner")
-		buyCorner.CornerRadius = UDim.new(0, 6)
-		buyCorner.Parent = buyButton
 
 		-- Buy button functionality
 		buyButton.MouseButton1Click:Connect(function()
-			local playerData = GameManager.GetPlayerData(player)
-			if playerData.money >= itemData.price then
-				-- Purchase successful
-				GameManager.RemoveMoney(player, itemData.price)
-				GameManager.AddItem(player, itemData.id, 1)
+			if itemData.gamepass then
+				-- Handle gamepass purchase (would integrate with Roblox MarketplaceService)
+				print("🎮 Gamepass purchase initiated: " .. itemData.name .. " for " .. itemData.price .. " Robux!")
+				-- Here you would use MarketplaceService:PromptGamePassPurchase()
 
-				-- Update money display
-				moneyLabel.Text = "💰 " .. GameManager.GetPlayerData(player).money
-
-				-- Success animation
-				local successTween = TweenService:Create(
+				-- Visual feedback for gamepass
+				local gamepassTween = TweenService:Create(
 					buyButton,
-					TweenInfo.new(0.2, Enum.EasingStyle.Bounce),
-					{ BackgroundColor3 = Color3.fromRGB(50, 255, 50) }
+					TweenInfo.new(0.3, Enum.EasingStyle.Bounce),
+					{ BackgroundColor3 = Color3.fromRGB(255, 215, 0) }
 				)
-				successTween:Play()
+				gamepassTween:Play()
 
-				successTween.Completed:Connect(function()
+				gamepassTween.Completed:Connect(function()
 					local returnTween = TweenService:Create(
 						buyButton,
 						TweenInfo.new(0.3, Enum.EasingStyle.Quad),
-						{ BackgroundColor3 = Color3.fromRGB(100, 200, 100) }
+						{ BackgroundColor3 = Color3.fromRGB(60, 60, 60) }
 					)
 					returnTween:Play()
 				end)
-
-				print("✅ Purchased " .. itemData.name .. " for " .. itemData.price .. " coins!")
 			else
-				-- Not enough money
-				local errorTween = TweenService:Create(
-					buyButton,
-					TweenInfo.new(0.2, Enum.EasingStyle.Bounce),
-					{ BackgroundColor3 = Color3.fromRGB(255, 50, 50) }
-				)
-				errorTween:Play()
+				-- Regular item purchase with coins
+				local playerData = GameManager.GetPlayerData(player)
+				if playerData.money >= itemData.price then
+					-- Purchase successful
+					GameManager.RemoveMoney(player, itemData.price)
+					GameManager.AddItem(player, itemData.id, 1)
 
-				errorTween.Completed:Connect(function()
-					local returnTween = TweenService:Create(
+					-- Update money display
+					moneyLabel.Text = "$" .. GameManager.GetPlayerData(player).money
+
+					-- Success animation
+					local successTween = TweenService:Create(
 						buyButton,
-						TweenInfo.new(0.3, Enum.EasingStyle.Quad),
-						{ BackgroundColor3 = Color3.fromRGB(100, 200, 100) }
+						TweenInfo.new(0.2, Enum.EasingStyle.Bounce),
+						{ BackgroundColor3 = Color3.fromRGB(50, 255, 50) }
 					)
-					returnTween:Play()
-				end)
+					successTween:Play()
 
-				print("❌ Not enough money! Need " .. itemData.price .. " coins.")
+					successTween.Completed:Connect(function()
+						local returnTween = TweenService:Create(
+							buyButton,
+							TweenInfo.new(0.3, Enum.EasingStyle.Quad),
+							{ BackgroundColor3 = Color3.fromRGB(60, 60, 60) }
+						)
+						returnTween:Play()
+					end)
+
+					print("✅ Purchased " .. itemData.name .. " for " .. itemData.price .. " coins!")
+				else
+					-- Not enough money
+					local errorTween = TweenService:Create(
+						buyButton,
+						TweenInfo.new(0.2, Enum.EasingStyle.Bounce),
+						{ BackgroundColor3 = Color3.fromRGB(255, 50, 50) }
+					)
+					errorTween:Play()
+
+					errorTween.Completed:Connect(function()
+						local returnTween = TweenService:Create(
+							buyButton,
+							TweenInfo.new(0.3, Enum.EasingStyle.Quad),
+							{ BackgroundColor3 = Color3.fromRGB(60, 60, 60) }
+						)
+						returnTween:Play()
+					end)
+
+					print("❌ Not enough money! Need " .. itemData.price .. " coins.")
+				end
 			end
 		end)
 
@@ -386,7 +462,7 @@ function ShopGUI.CreateShopInterface()
 			local hoverTween = TweenService:Create(
 				buyButton,
 				TweenInfo.new(0.2, Enum.EasingStyle.Quad),
-				{ Size = UDim2.fromScale(0.85, 0.13) }
+				{ BackgroundColor3 = Color3.fromRGB(80, 80, 80) }
 			)
 			hoverTween:Play()
 		end)
@@ -395,7 +471,7 @@ function ShopGUI.CreateShopInterface()
 			local leaveTween = TweenService:Create(
 				buyButton,
 				TweenInfo.new(0.2, Enum.EasingStyle.Quad),
-				{ Size = UDim2.fromScale(0.8, 0.12) }
+				{ BackgroundColor3 = Color3.fromRGB(60, 60, 60) }
 			)
 			leaveTween:Play()
 		end)
@@ -428,15 +504,13 @@ function ShopGUI.CreateShopInterface()
 		button.MouseButton1Click:Connect(function()
 			-- Update button states
 			for cat, btn in pairs(categoryButtons) do
-				btn.BackgroundColor3 = cat == category and Color3.fromRGB(100, 150, 255) or Color3.fromRGB(60, 60, 80)
+				btn.TextColor3 = cat == category and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(180, 180, 180)
 			end
 
 			currentCategory = category
 			populateCategory(category)
 		end)
-	end
-
-	-- Close button functionality
+	end -- Close button functionality
 	closeButton.MouseButton1Click:Connect(function()
 		shopScreen:Destroy()
 	end)
@@ -477,6 +551,22 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
 
 	if input.KeyCode == Enum.KeyCode.P then
 		ShopGUI.OpenShop()
+	end
+end)
+
+-- RemoteEvent listeners for ShopOpenBlock
+local openShopRemote = ReplicatedStorage:WaitForChild("OpenShopRemote")
+local closeShopRemote = ReplicatedStorage:WaitForChild("CloseShopRemote")
+
+openShopRemote.OnClientEvent:Connect(function()
+	ShopGUI.OpenShop()
+end)
+
+closeShopRemote.OnClientEvent:Connect(function()
+	-- Close any existing shop
+	local existingShop = playerGui:FindFirstChild("ShopGUI")
+	if existingShop then
+		existingShop:Destroy()
 	end
 end)
 
