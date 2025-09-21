@@ -14,7 +14,9 @@ local camera = Workspace.CurrentCamera
 
 -- Settings
 local BLUR_STRENGTH = 24
-local FADE_DURATION = 2
+
+-- Track if startup screen has been shown
+local hasShownStartupScreen = false
 
 -- Function to set camera to the Camera part
 local function setCameraToStartupView()
@@ -103,7 +105,7 @@ local function createStartupScreen()
 	-- Create main title
 	local titleLabel = Instance.new("TextLabel")
 	titleLabel.Name = "Title"
-	titleLabel.Size = UDim2.fromScale(1, 0.7)
+	titleLabel.Size = UDim2.fromScale(1, 3)
 	titleLabel.Position = UDim2.fromScale(0, 0)
 	titleLabel.BackgroundTransparency = 1
 	titleLabel.Text = "SANCTUM TRIALS"
@@ -137,45 +139,107 @@ local function createStartupScreen()
 	return startupGui, blurEffect, pulseAnimation
 end
 
--- Function to close startup screen
+-- Function to close startup screen with smooth transitions
 local function closeStartupScreen(startupGui, blurEffect, pulseAnimation)
+	print("🎬 Starting smooth transition...")
+
 	-- Stop animations
 	if pulseAnimation then
 		pulseAnimation:Cancel()
 	end
 
-	-- Fade out the screen
-	local fadeOutTween = TweenService:Create(
-		startupGui,
-		TweenInfo.new(FADE_DURATION, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
-		{ Enabled = false }
+	-- Find the title elements to fade them out first
+	local titleContainer = startupGui:FindFirstChild("Background"):FindFirstChild("TitleContainer")
+	local titleLabel = titleContainer:FindFirstChild("Title")
+	local subtitleLabel = titleContainer:FindFirstChild("Subtitle")
+
+	-- Phase 1: Fade out title and subtitle first (0.5 seconds)
+	local titleFadeOut = TweenService:Create(
+		titleLabel,
+		TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
+		{ TextTransparency = 1, TextStrokeTransparency = 1 }
 	)
 
-	-- Remove blur
-	local blurTween = TweenService:Create(
-		blurEffect,
-		TweenInfo.new(FADE_DURATION, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
-		{ Size = 0 }
+	local subtitleFadeOut = TweenService:Create(
+		subtitleLabel,
+		TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
+		{ TextTransparency = 1 }
 	)
 
-	fadeOutTween:Play()
-	blurTween:Play()
+	titleFadeOut:Play()
+	subtitleFadeOut:Play()
 
-	-- Reset camera to player when fade completes
-	fadeOutTween.Completed:Connect(function()
-		camera.CameraType = Enum.CameraType.Custom
-		camera.CameraSubject = player.Character and player.Character:FindFirstChild("Humanoid")
+	-- Wait for title to fade out before continuing
+	titleFadeOut.Completed:Connect(function()
+		-- Now proceed with the black transition
 
-		-- Clean up
-		startupGui:Destroy()
-		blurEffect:Destroy()
+		-- Create a transition overlay for smooth fade
+		local transitionFrame = Instance.new("Frame")
+		transitionFrame.Name = "TransitionOverlay"
+		transitionFrame.Size = UDim2.fromScale(1, 1)
+		transitionFrame.Position = UDim2.fromScale(0, 0)
+		transitionFrame.BackgroundColor3 = Color3.new(0, 0, 0) -- Black
+		transitionFrame.BorderSizePixel = 0
+		transitionFrame.BackgroundTransparency = 1 -- Start invisible
+		transitionFrame.Parent = startupGui
 
-		print("✨ Startup screen closed - Welcome to Sanctum Trials!")
+		-- Phase 2: Fade to black (0.8 seconds)
+		local fadeToBlackTween = TweenService:Create(
+			transitionFrame,
+			TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
+			{ BackgroundTransparency = 0 }
+		)
+
+		fadeToBlackTween:Play()
+
+		-- Phase 3: When fade to black completes, switch camera and start fade out
+		fadeToBlackTween.Completed:Connect(function()
+			print("🎥 Switching camera to player...")
+
+			-- Reset camera to player
+			camera.CameraType = Enum.CameraType.Custom
+			if player.Character and player.Character:FindFirstChild("Humanoid") then
+				camera.CameraSubject = player.Character.Humanoid
+			end
+
+			-- Wait a moment for camera to settle
+			task.wait(0.3)
+
+			-- Phase 4: Fade out from black (1.2 seconds)
+			local fadeFromBlackTween = TweenService:Create(
+				transitionFrame,
+				TweenInfo.new(1.2, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
+				{ BackgroundTransparency = 1 }
+			)
+
+			-- Also remove blur gradually
+			local blurTween = TweenService:Create(
+				blurEffect,
+				TweenInfo.new(1.2, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
+				{ Size = 0 }
+			)
+
+			fadeFromBlackTween:Play()
+			blurTween:Play()
+
+			-- Final cleanup when everything is done
+			fadeFromBlackTween.Completed:Connect(function()
+				-- Clean up all startup screen elements
+				startupGui:Destroy()
+				blurEffect:Destroy()
+
+				print("✨ Startup screen transition completed - Welcome to Sanctum Trials!")
+			end)
+		end)
 	end)
 end
-
--- Function to initialize startup screen
 local function initStartupScreen()
+	-- Only show startup screen once per game session
+	if hasShownStartupScreen then
+		print("🎮 Startup screen already shown - skipping")
+		return
+	end
+
 	print("🚀 Starting initialization...")
 
 	-- Wait for character to load
@@ -192,6 +256,7 @@ local function initStartupScreen()
 
 	if not cameraSuccess then
 		warn("❌ Failed to set camera - skipping startup screen")
+		hasShownStartupScreen = true -- Mark as shown even if failed
 		return
 	end
 
@@ -207,6 +272,8 @@ local function initStartupScreen()
 		then
 			connection:Disconnect()
 			closeStartupScreen(startupGui, blurEffect, pulseAnimation)
+			-- Mark as shown after player closes it
+			hasShownStartupScreen = true
 		end
 	end)
 
